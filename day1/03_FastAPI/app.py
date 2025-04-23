@@ -55,6 +55,8 @@ class SimpleGenerationRequest(BaseModel):
 class GenerationResponse(BaseModel):
     generated_text: str
     response_time: float
+    generated_tokens: int  # 追加：生成トークン数
+
 
 # --- モデル関連の関数 ---
 # モデルのグローバル変数
@@ -186,13 +188,17 @@ async def generate_simple(request: SimpleGenerationRequest):
         assistant_response = extract_assistant_response(outputs, request.prompt)
         print(f"抽出されたアシスタント応答: {assistant_response[:100]}...")  # 長い場合は切り捨て
 
+        # 簡易的に生成トークン数を計算
+        generated_tokens = len(assistant_response.split())
+
         end_time = time.time()
         response_time = end_time - start_time
         print(f"応答生成時間: {response_time:.2f}秒")
 
         return GenerationResponse(
             generated_text=assistant_response,
-            response_time=response_time
+            response_time=response_time,
+            generate_tokens=generated_tokens,  # 生成トークン数を追加
         )
 
     except Exception as e:
