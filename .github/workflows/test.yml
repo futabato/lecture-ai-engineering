@@ -34,4 +34,4 @@ jobs:
 
     - name: Run pytest on main.pytest
       run: |
-        pytest day5/演習2/main.py -y
+        pytest day5/演習2/main.py -v
