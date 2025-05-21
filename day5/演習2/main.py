@@ -247,6 +247,29 @@ def test_model_performance():
         metrics["inference_time"] < 1.0
     ), f"推論時間が長すぎます: {metrics['inference_time']}秒"
 
+def test_inference_speed_and_accuracy():
+    """推論速度と精度のテスト"""
+    # データ準備
+    data = DataLoader.load_titanic_data()
+    X, y = DataLoader.preprocess_titanic_data(data)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
+
+    # モデル学習
+    model = ModelTester.train_model(X_train, y_train)
+
+    # 評価
+    metrics = ModelTester.evaluate_model(model, X_test, y_test)
+
+    # 精度の確認
+    assert metrics["accuracy"] >= 0.75, f"精度が基準を下回っています: {metrics['accuracy']}"
+
+    # 推論時間の確認
+    assert (
+        metrics["inference_time"] < 1.0
+    ), f"推論時間が長すぎます: {metrics['inference_time']}秒"
+
 
 if __name__ == "__main__":
     # データロード
